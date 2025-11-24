@@ -1,0 +1,5 @@
+ "description": "Uma aplicação que identifica alimentos na sua geladeira e sugere receitas.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

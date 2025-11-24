@@ -1,0 +1,127 @@
+import { GoogleGenAI, Type } from "@google/genai";
+import type { Recipe, UserProfile } from '../types';
+
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+
+const RECIPE_SCHEMA = {
+  type: Type.ARRAY,
+  items: {
+    type: Type.OBJECT,
+    properties: {
+      recipeName: {
+        type: Type.STRING,
+        description: "O nome da receita."
+      },
+      description: {
+        type: Type.STRING,
+        description: "Uma breve descrição da receita."
+      },
+      prepTime: {
+        type: Type.STRING,
+        description: "O tempo de preparo, ex: '30 min'."
+      },
+      tags: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.STRING
+        },
+        description: "Tags como 'Saudável', 'Rápido', 'Comfort Food'."
+      },
+      ingredients: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.STRING
+        },
+        description: "Uma lista detalhada dos ingredientes necessários."
+      },
+      instructions: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.STRING
+        },
+        description: "Uma lista passo a passo de como preparar a receita."
+      }
+    },
+    required: ["recipeName", "description", "prepTime", "tags", "ingredients", "instructions"]
+  },
+};
+
+const INGREDIENTS_SCHEMA = {
+  type: Type.OBJECT,
+  properties: {
+    ingredients: {
+      type: Type.ARRAY,
+      items: {
+        type: Type.STRING
+      },
+      description: "Uma lista dos alimentos identificados na imagem."
+    }
+  },
+  required: ["ingredients"]
+};
+
+export const identifyIngredientsFromImage = async (base64Image: string): Promise<string[]> => {
+  const imagePart = {
+    inlineData: {
+      mimeType: 'image/jpeg',
+      data: base64Image,
+    },
+  };
+
+  const textPart = {
+    text: "Identifique os alimentos nesta imagem de uma geladeira ou despensa e liste-os. Retorne apenas a lista de ingredientes em formato JSON, de acordo com o schema."
+  };
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: { parts: [imagePart, textPart] },
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: INGREDIENTS_SCHEMA,
+      },
+    });
+
+    const jsonText = response.text.trim();
+    const result: { ingredients: string[] } = JSON.parse(jsonText);
+    return result.ingredients || [];
+  } catch (error) {
+    console.error("Error calling Gemini API for image analysis:", error);
+    throw new Error("Failed to identify ingredients from image.");
+  }
+};
+
+
+export const generateRecipes = async (ingredients: string[], profile: UserProfile): Promise<Recipe[]> => {
+  let preferencesPrompt = '';
+  if (profile.dietaryRestrictions && profile.dietaryRestrictions.length > 0) {
+    preferencesPrompt = `Leve em consideração as seguintes restrições alimentares do usuário: ${profile.dietaryRestrictions.join(', ')}. As receitas devem ser adequadas para essas preferências.`
+  }
+
+  const prompt = `
+    Você é um assistente de culinária chamado 'Comida Inteligente'.
+    Com base na seguinte lista de ingredientes: ${ingredients.join(', ')}, sugira 3 receitas criativas.
+    ${preferencesPrompt}
+    Para cada receita, forneça um nome, uma breve descrição, o tempo de preparo, uma lista de 2 a 3 tags, uma lista de ingredientes e as instruções passo a passo.
+    Responda apenas com o JSON formatado de acordo com o schema fornecido.
+  `;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: RECIPE_SCHEMA,
+      },
+    });
+
+    const jsonText = response.text.trim();
+    const recipes: Recipe[] = JSON.parse(jsonText);
+    return recipes;
+
+  } catch (error) {
+    console.error("Error calling Gemini API:", error);
+    throw new Error("Failed to generate recipes from Gemini API.");
+  }
+};
