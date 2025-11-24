@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nossos Produtos - Comida Inteligente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+
+    <!-- Header -->
+    <header class="bg-black/30 backdrop-blur-md sticky top-0 z-10">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div>
+                <a href="#">
+                    <!-- Usando o logo da pasta img -->
+                    <img class="h-10" src="img/logo.png" alt="Logo Comida Inteligente">
+                </a>
+            </div>
+            <div class="flex space-x-6">
+                <a href="/index.html" class="text-gray-300 hover:text-green-400 transition-colors">App</a>
+                <a href="/products.html" class="text-green-400 font-semibold">Produtos</a>
+                <a href="#" class="text-gray-300 hover:text-green-400 transition-colors">Contato</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+        <h1 class="text-4xl font-bold text-center text-white mb-12">Nossos Produtos</h1>
+
+        <!-- Product Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <!-- Product Card 1 -->
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-[1.02]">
+                <!-- Usando a imagem do produto 1 -->
+                <img class="w-full h-56 object-cover" src="img/produto1.jpg" alt="Produto 1">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold text-white mb-2">Kit Culinário Essencial</h2>
+                    <p class="text-gray-300 mb-4">O conjunto perfeito de utensílios para começar suas aventuras na cozinha com as receitas do nosso app.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-3xl font-bold text-green-400">R$129,90</span>
+                        <button class="px-5 py-2.5 bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold rounded-full shadow-lg hover:scale-105 transform transition-transform duration-300">
+                            Comprar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Card 2 -->
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-[1.02]">
+                <!-- Usando a imagem do produto 2 -->
+                <img class="w-full h-56 object-cover" src="img/produto2.jpg" alt="Produto 2">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold text-white mb-2">Potes Herméticos Inteligentes</h2>
+                    <p class="text-gray-300 mb-4">Mantenha seus ingredientes frescos por mais tempo com nosso kit de potes com vedação a vácuo.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-3xl font-bold text-green-400">R$89,90</span>
+                        <button class="px-5 py-2.5 bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold rounded-full shadow-lg hover:scale-105 transform transition-transform duration-300">
+                            Comprar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product Placeholder -->
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl shadow-lg overflow-hidden md:col-span-2">
+                 <div class="p-6 text-center">
+                    <h2 class="text-2xl font-bold text-white mb-2">Mais novidades em breve!</h2>
+                    <p class="text-gray-300">Estamos sempre trabalhando para trazer os melhores produtos para a sua cozinha.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black/30 mt-12">
+        <div class="container mx-auto px-6 py-6 text-center text-gray-400">
+            <p>&copy; 2024 Comida Inteligente. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
